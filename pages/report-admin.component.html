@@ -1,0 +1,44 @@
+<app-breadcrumbs
+  [customPageName]="'Отчеты'"
+  [customParentPageName]="'Кабинет'"
+></app-breadcrumbs>
+
+<div class="statistics-wrapper">
+  <div class="container p-bottom-30">
+    <div class="row">
+      <div class="col-12">
+        <h3 class="page-title offseted">
+          Отчеты
+        </h3>
+      </div>
+    </div>
+    <div class="adaptive-filters-wrapper">
+      <div class="select-loader" *ngIf="obtaining">
+        <ngx-skeleton-loader
+          count="1"
+          [theme]="{
+            height: '48px'
+          }"
+        >
+        </ngx-skeleton-loader>
+      </div>
+      <div class="select-loader" *ngIf="obtaining">
+        <ngx-skeleton-loader
+          count="1"
+          [theme]="{
+            height: '48px'
+          }"
+        >
+        </ngx-skeleton-loader>
+      </div>
+      <app-report-type-filter
+        *ngIf="!obtaining"
+        (loadReport)="loadReport($event)"
+        (openFilters)="filtersModal()"
+        (changeFilters)="clearErrorMess()"
+        (clearReportTable)="clearTable()"
+      ></app-report-type-filter>
+    </div>
+    <app-report-table #reportTable></app-report-table>
+  </div>
+</div>

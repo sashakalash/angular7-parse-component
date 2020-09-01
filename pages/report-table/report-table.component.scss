@@ -1,0 +1,246 @@
+@import '~src/scss/variables';
+@import '~src/scss/mixins';
+@import '~src/scss/bootstrap_basics';
+
+.long-request {
+  text-align: center;
+  margin: 1rem 0;
+}
+
+.error-wrapper {
+  margin-top: 24px;
+  margin-bottom: 24px;
+}
+
+.table-wrapper {
+  overflow-x: auto;
+
+  table.table {
+    table-layout: auto;
+
+    td {
+      & > div {
+        @include text-ellipsis(300px);
+      }
+    }
+  }
+
+  .th-value {
+    & + .th-custom-value {
+      display: none;
+    }
+
+    .th-custom-value {
+      display: block;
+    }
+  }
+}
+
+.uptable-message {
+  margin-top: 24px;
+  padding-left: 10px;
+  border-left: 2px solid $link-color;
+  font-size: 16px;
+  line-height: 26px;
+}
+
+.link-colored {
+  color: $link-color;
+
+  &:hover {
+    cursor: pointer;
+    text-decoration: underline;
+  }
+}
+
+.statistic-controls-wrapper {
+  @include flex-container(row, flex-start, center);
+}
+
+.filter-wrapper {
+  @include flex-container(row, space-between, center);
+
+  &.date-filters-wrapper {
+    padding: 0 60px 0 30px;
+  }
+
+  input {
+    display: none;
+
+    & + label {
+      font-size: 14px;
+      line-height: 20px;
+
+      &:hover {
+        color: $link-color;
+        text-decoration: underline;
+        cursor: pointer;
+      }
+    }
+
+    &:checked {
+      & + label {
+        color: $link-color;
+        text-decoration: underline;
+      }
+    }
+  }
+}
+
+.form-item {
+  padding: 0 8px;
+}
+
+.adaptive-filters-wrapper {
+  @include flex-container(row, flex-end, center);
+
+  .filter-wrapper {
+    & + .filter-wrapper {
+      margin-left: 16px;
+    }
+  }
+
+  .form-group {
+    width: 100%;
+
+    .ng-select {
+      width: 196px;
+    }
+  }
+}
+
+.purchase-currency {
+  font-size: 12px;
+  line-height: 16px;
+  color: $td-currency-color;
+
+  span {
+    padding-left: 8px;
+    font-size: 12px;
+    line-height: 16px;
+    color: $td-currency-color;
+  }
+}
+
+.purchase-currency-name {
+  padding-left: 8px;
+}
+
+.place-logo {
+  padding-right: 12px;
+  width: 52px;
+}
+
+.content-wrapper {
+  max-width: 360px;
+  white-space: pre-wrap;
+  word-break: break-word;
+
+  .link-content {
+    color: $link-color !important;
+    text-decoration: underline;
+  }
+
+  .product-name:hover {
+    .link-content {
+      text-decoration: none;
+    }
+  }
+}
+
+td.address {
+  width: 240px;
+}
+@media ( max-width: 767px ) {
+  .ng-select .ng-select-container .ng-value-container .ng-placeholder {
+    font-size: 14px;
+  }
+
+  .adaptive-filters-wrapper {
+    justify-content: space-between;
+    flex-wrap: nowrap;
+    margin: 0 -4px;
+
+    .filter-wrapper {
+      padding: 0 4px;
+
+      &:first-child {
+        width: 40%;
+        order: 2;
+      }
+
+      &:last-child {
+        width: 60%;
+        order: 1;
+      }
+
+      .form-group .ng-select {
+        width: 100%;
+      }
+
+      & + .filter-wrapper {
+        margin-left: 0;
+      }
+    }
+  }
+
+  .purchase-currency {
+    @include flex-container(row, flex-start, flex-end);
+  }
+
+  .product-card-type {
+    width: 32px;
+    height: 24px;
+    margin-right: 14px;
+  }
+
+  .content-wrapper {
+    width: 100%;
+    position: relative;
+
+    .mobile-link {
+      position: absolute;
+      left: 0;
+      bottom: -12px;
+      right: 0;
+      top: -12px;
+      z-index: 2;
+    }
+
+    &:after {
+      content: '';
+      position: absolute;
+      right: 0;
+      top: 50%;
+      margin-top: -6px;
+      height: 12px;
+      width: 8px;
+      display: block;
+      background: url(data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iOCIgaGVpZ2h0PSIxMiIgdmlld0JveD0iMCAwIDggMTIiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHBhdGggZD0iTTAuNTg5ODQ0IDEwLjU4TDUuMTY5ODQgNkwwLjU4OTg0NCAxLjQxTDEuOTk5ODQgMEw3Ljk5OTg0IDZMMS45OTk4NCAxMkwwLjU4OTg0NCAxMC41OFoiIGZpbGw9IiMwRTdCNkUiLz48L3N2Zz4=)
+        no-repeat center;
+    }
+  }
+
+  .purchase-value {
+    font-size: 16px;
+  }
+
+  .purchase-currency-name {
+    font-size: 12px;
+    padding-left: 5px;
+    color: $text-def;
+  }
+
+  .purchase-wrapper {
+    @include flex-container(column, flex-end, flex-end);
+  }
+}
+
+.reports-btn-wrapper {
+  @include flex-container(row, flex-start, center);
+  display: inline-block;
+}
+
+.btn-wrapper {
+  padding: 0 8px;
+}

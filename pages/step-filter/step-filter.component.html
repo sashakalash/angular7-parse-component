@@ -1,0 +1,53 @@
+<form [formGroup]="form">
+  <label *ngIf="direction">{{ direction }}</label>
+  <div class="row">
+    <div class="col-3">
+      <label *ngIf="showLabels">Дни</label>
+      <input
+        class="form-control"
+        digitOnly
+        (input)="onInput($event, 'days')"
+        formControlName="days"
+        max="365"
+        placeholder="дд"
+        [ngClass]="class"
+      />
+    </div>
+    <div class="col-3">
+      <label *ngIf="showLabels">Часы</label>
+      <input
+        class="form-control"
+        digitOnly
+        max="23"
+        (input)="onInput($event, 'hours')"
+        formControlName="hours"
+        placeholder="чч"
+        [ngClass]="class"
+      />
+    </div>
+    <div class="col-3">
+      <label *ngIf="showLabels">Минуты</label>
+      <input
+        class="form-control"
+        digitOnly
+        max="59"
+        (input)="onInput($event, 'minutes')"
+        formControlName="minutes"
+        placeholder="мм"
+        [ngClass]="class"
+      />
+    </div>
+    <div class="col-3">
+      <label *ngIf="showLabels">Секунды</label>
+      <input
+        class="form-control"
+        digitOnly
+        max="59"
+        (input)="onInput($event, 'seconds')"
+        formControlName="seconds"
+        placeholder="сс"
+        [ngClass]="class"
+      />
+    </div>
+  </div>
+</form>

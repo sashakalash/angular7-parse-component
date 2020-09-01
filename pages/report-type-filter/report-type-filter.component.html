@@ -1,0 +1,163 @@
+<div class="filter-wrapper" *ngIf="!obtaining">
+  <form [formGroup]="form" (ngSubmit)="onSubmit()">
+    <div class="filter-wrapper-inner form-group-wrapper">
+      <div class="row">
+        <div class="col-12 col-md-6">
+          <div class="row">
+            <div class="col-12 col-md-6 filters">
+              <div class="input-group">
+                <ng-select
+                  [dropdownPosition]="'bottom'"
+                  [clearable]="false"
+                  [searchable]="false"
+                  formControlName="reportType"
+                  (change)="changeReportType()"
+                  placeholder="Отчет по чекам"
+                >
+                  <ng-option
+                    *ngFor="let r of reportTypes"
+                    value="{{ r.code }}"
+                    >{{ r.name }}</ng-option
+                  >
+                </ng-select>
+              </div>
+            </div>
+            <div class="col-12 col-md-6 filters">
+              <div class="input-group">
+                <ng-select
+                  [dropdownPosition]="'bottom'"
+                  [clearable]="false"
+                  [searchable]="false"
+                  formControlName="reportIndex"
+                  (change)="changeIndex()"
+                  placeholder="Сортировать по"
+                >
+                  <ng-option
+                    *ngFor="let r of reportIndexes"
+                    value="{{ r.code }}"
+                    >{{ r.name }}</ng-option
+                  >
+                </ng-select>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-12 col-md-6">
+          <div class="combo-group">
+            <div class="input-group ">
+              <ng-select
+                [dropdownPosition]="'bottom'"
+                [ngClass]="{
+                  'browser-default': true,
+                  bootstrapButton: true,
+                  btn: false
+                }"
+                [clearable]="true"
+                [searchable]="false"
+                formControlName="reportFirstSection"
+                (change)="changeFirstSection()"
+                (clear)="clearSection()"
+                placeholder="Сортировать по"
+              >
+                <ng-option
+                  *ngFor="let r of reportSections"
+                  value="{{ r.code }}"
+                  >{{ r.name }}</ng-option
+                >
+              </ng-select>
+            </div>
+            <button
+              type="button"
+              class="btn btn-link btn-link-sort"
+              [ngClass]="loading ? 'loading' : ''"
+              (click)="onSwapAxes()"
+              i18n
+            >
+              <span *ngIf="loading" class="loading"
+                ><span class="loader-icon"></span
+              ></span>
+            </button>
+            <div class="input-group">
+              <ng-select
+                [dropdownPosition]="'bottom'"
+                [ngClass]="{
+                  'browser-default': true,
+                  bootstrapButton: true,
+                  btn: false
+                }"
+                [clearable]="true"
+                [searchable]="false"
+                formControlName="reportSecondSection"
+                (change)="changeSecondSection()"
+                (clear)="clearSection()"
+                placeholder="Сортировать по"
+              >
+                <ng-option
+                  *ngFor="let r of reportSections"
+                  value="{{ r.code }}"
+                  >{{ r.name }}</ng-option
+                >
+              </ng-select>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row m-top-24" *ngIf="firstHasStep">
+        <div class="col-3 step-label">
+          <span class="step-title">
+            Шаг времени для разреза 1
+          </span>
+        </div>
+        <app-step-filter
+          class="col-9"
+          (setStep)="setStep($event, 'first')"
+          #firstStepFilter
+          [showLabels]="true"
+        ></app-step-filter>
+      </div>
+      <div class="row m-top-24" *ngIf="secondHasStep">
+        <div class="col-3 step-label">
+          <span class="step-title">
+            Шаг времени для разреза 2
+          </span>
+        </div>
+        <app-step-filter
+          class="col-9"
+          (setStep)="setStep($event, 'second')"
+          #secondStepFilter
+          [showLabels]="true"
+        ></app-step-filter>
+      </div>
+    </div>
+
+    <div class="filter-controls">
+      <button
+        type="button"
+        class="btn btn-primary filter-submit-btn"
+        [ngClass]="loading ? 'loading' : ''"
+        (click)="openFiltersModal(filtersmodal)"
+        i18n
+      >
+        <span class="filters-count" *ngIf="filtersCount">{{
+          filtersCount
+        }}</span>
+        <span class="text">Фильтр</span>
+        <span
+          class="icon filter"
+          [inlineSVG]="'../../../../../assets/sprites/sprite.svg#filters'"
+        ></span>
+        <span *ngIf="loading" class="loading"
+          ><span class="loader-icon"></span
+        ></span>
+      </button>
+    </div>
+  </form>
+</div>
+
+<ng-template #filtersmodal let-c="close" let-close="dismiss">
+  <app-report-filters-modal
+    (filtersCountOutput)="activeFiltersCount($event)"
+    [reportType]="f.reportType.value"
+  >
+  </app-report-filters-modal>
+</ng-template>

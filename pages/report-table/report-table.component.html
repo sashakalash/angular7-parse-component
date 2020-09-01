@@ -1,0 +1,89 @@
+<div class="filter-controls">
+  <div class="reports-btn-wrapper">
+    <div class="btn-wrapper">
+      <button
+        class="btn primary-light btn-download"
+        (click)="downloadAllCommodities()"
+      >
+        Выгрузить список чеков Tax Free
+      </button>
+    </div>
+    <div class="btn-wrapper"></div>
+  </div>
+  <div class="reports-btn-wrapper" *ngIf="!obtaining && reportForTable">
+    <div class="btn-wrapper">
+      <button class="btn primary-light btn-download" (click)="download()" i18n>
+        Скачать отчёт
+      </button>
+    </div>
+    <div class="btn-wrapper"></div>
+  </div>
+</div>
+<div *ngIf="obtaining && showTimerMessage">
+  <h4 class="long-request">{{ longRequestText }}</h4>
+</div>
+<div class="error-wrapper">
+  <div *ngIf="backendError" class="alert alert-danger noty-message">
+    {{ backendError }}
+  </div>
+</div>
+<app-report-empty
+  *ngIf="!obtaining && (!reportForTable || reportForTable.rows.length === 0)"
+></app-report-empty>
+<div class="table-wrapper" *ngIf="obtaining">
+  <ngx-skeleton-loader
+    count="5"
+    [theme]="{
+      'border-radius': '0',
+      height: '64px',
+      'margin-bottom': '64px'
+    }"
+  >
+  </ngx-skeleton-loader>
+</div>
+<div class="uptable-message" *ngIf="totalPages > 100">
+  Вы видите не всю информацию.<br />
+  Полный перечень значений можете увидеть
+  <span class="link-colored" (click)="download()">скачав отчет</span> в виде
+  Excel-таблицы
+</div>
+<!---->
+<div
+  id="printTable"
+  class="table-wrapper"
+  *ngIf="!obtaining && reportForTable && reportForTable.rows.length > 0"
+>
+  <table class="table table-striped">
+    <thead *ngIf="reportForTable.headers.length !== 0">
+      <tr>
+        <th i18n *ngFor="let header of reportForTable.headers">
+          <span class="th-value">{{ header.name }}</span>
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr
+        *ngFor="
+          let row of reportForTable.rows
+            | paginate: { itemsPerPage: 10, currentPage: p }
+        "
+      >
+        <td data-label="Place" *ngFor="let header of reportForTable.headers">
+          <div class="content-wrapper" i18n>
+            {{ row[header.code] }}
+          </div>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="pagination-wrapper">
+    <pagination-controls
+      (pageChange)="p = $event"
+      responsive="true"
+      previousLabel=""
+      nextLabel=""
+      autoHide="true"
+    ></pagination-controls>
+  </div>
+</div>

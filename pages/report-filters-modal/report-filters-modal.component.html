@@ -1,0 +1,550 @@
+<div class="modal-header">
+  <h4
+    class="modal-title text-center w-100 font-weight-bold"
+    id="modal-basic-title"
+    i18n
+  >
+    Фильтр
+  </h4>
+  <button
+    type="button"
+    class="close"
+    aria-label="Close"
+    (click)="close()"
+  ></button>
+</div>
+
+<div class="modal-body">
+  <div class="modal-body-inner">
+    <form [formGroup]="form">
+      <div class="form-group-wrapper">
+        <ng-container *ngFor="let key of map(reportSections, 'code')">
+          <div class="form-group" [ngSwitch]="getFilterType(key)">
+            <div class="row">
+              <div class="col-6">
+                <div class="input-group"></div>
+              </div>
+              <div class="col-6">
+                <div class="input-group"></div>
+              </div>
+            </div>
+            <label class="label">
+              <span>{{ getFilterName(key) }}</span>
+            </label>
+            <div class="input-group" *ngSwitchCase="'multiple'">
+              <ng-select
+                [ngClass]="{
+                  'browser-default': true,
+                  bootstrapButton: true,
+                  btn: false
+                }"
+                [clearable]="true"
+                [searchable]="false"
+                [multiple]="true"
+                formControlName="{{ key }}"
+                [items]="getSelectOptions(key)"
+                bindLabel="name"
+                bindValue="code"
+                (change)="selectMultipleChange($event, key)"
+                i18n-placeholder
+              >
+                <ng-template ng-option-tmp let-item="item">
+                  <span>{{ item.name }}</span>
+                  <span *ngIf="item.paymentAddress"
+                    >, {{ item.paymentAddress }}</span
+                  >
+                </ng-template>
+              </ng-select>
+            </div>
+            <ng-container *ngSwitchCase="'bound'">
+              <div [ngSwitch]="key">
+                <ng-container *ngSwitchCase="'YEAR'">
+                  <div class="row">
+                    <div class="col-sm-12 col-md-6 col-lg-6">
+                      <ng-select
+                        placeholder="От"
+                        id="{{ key }}_from"
+                        [ngClass]="{
+                          'browser-default': true,
+                          bootstrapButton: true,
+                          btn: false,
+                          'is-invalid':
+                            f.errors ||
+                            (f[key + '_to'].errors &&
+                              f[key + '_to'].errors.outOfRange)
+                        }"
+                        [clearable]="true"
+                        [searchable]="false"
+                        formControlName="{{ key }}_from"
+                        (change)="selectFromChange($event, key)"
+                      >
+                        <ng-option
+                          *ngFor="let r of getSelectOptions(key)"
+                          value="{{ r.code }}"
+                          >{{ r.name }}</ng-option
+                        >
+                      </ng-select>
+                    </div>
+                    <div class="col-sm-12 col-md-6 col-lg-6">
+                      <ng-select
+                        placeholder="До"
+                        id="{{ key }}_to"
+                        [ngClass]="{
+                          'browser-default': true,
+                          bootstrapButton: true,
+                          btn: false,
+                          'is-invalid':
+                            f.errors ||
+                            (f[key + '_to'].errors &&
+                              f[key + '_to'].errors.outOfRange)
+                        }"
+                        [clearable]="true"
+                        [searchable]="false"
+                        formControlName="{{ key }}_to"
+                        (change)="selectToChange($event, key)"
+                      >
+                        <ng-option
+                          *ngFor="let r of getSelectOptions(key)"
+                          value="{{ r.code }}"
+                          >{{ r.name }}</ng-option
+                        >
+                      </ng-select>
+                    </div>
+                    <div *ngIf="f[key + '_to'].errors" class="invalid-feedback">
+                      <div *ngIf="f[key + '_to'].errors?.outOfRange" i18n>
+                        Значение "до" должно превышать значение "от"
+                      </div>
+                    </div>
+                  </div>
+                </ng-container>
+                <ng-container *ngSwitchCase="'QUARTER'">
+                  <div class="row">
+                    <div class="col-sm-12 col-md-6 col-lg-6">
+                      <div class="row">
+                        <div class="col-sm-12 col-md-6 col-lg-6">
+                          <ng-select
+                            placeholder="От"
+                            id="{{ key }}_from_y"
+                            [ngClass]="{
+                              'browser-default': true,
+                              bootstrapButton: true,
+                              btn: false,
+                              'is-invalid':
+                                f.errors ||
+                                (f[key + '_to_q']?.errors &&
+                                  (f[key + '_to_q']?.errors?.outOfRange ||
+                                    f[key + '_to_q']?.errors?.notFullPeriod))
+                            }"
+                            [clearable]="true"
+                            [searchable]="false"
+                            formControlName="{{ key }}_from_y"
+                            (change)="selectFromChange($event, key)"
+                          >
+                            <ng-option
+                              *ngFor="let r of getSelectOptions('YEAR')"
+                              value="{{ r.code }}"
+                              >{{ r.name }}</ng-option
+                            >
+                          </ng-select>
+                        </div>
+                        <div class="col-sm-12 col-md-6 col-lg-6">
+                          <ng-select
+                            placeholder="От"
+                            id="{{ key }}_from_q"
+                            [ngClass]="{
+                              'browser-default': true,
+                              bootstrapButton: true,
+                              btn: false,
+                              'is-invalid':
+                                f.errors ||
+                                (f[key + '_to_q']?.errors &&
+                                  (f[key + '_to_q']?.errors?.outOfRange ||
+                                    f[key + '_to_q']?.errors?.notFullPeriod))
+                            }"
+                            [clearable]="true"
+                            [searchable]="false"
+                            formControlName="{{ key }}_from_q"
+                            (change)="selectFromChange($event, key)"
+                          >
+                            <ng-option
+                              *ngFor="let r of getSelectOptions(key)"
+                              value="{{ r.code }}"
+                              >{{ r.name }}</ng-option
+                            >
+                          </ng-select>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-sm-12 col-md-6 col-lg-6">
+                      <div class="row">
+                        <div class="col-sm-12 col-md-6 col-lg-6">
+                          <ng-select
+                            placeholder="До"
+                            id="{{ key }}_to_y"
+                            [ngClass]="{
+                              'browser-default': true,
+                              bootstrapButton: true,
+                              btn: false,
+                              'is-invalid':
+                                f.errors ||
+                                (f[key + '_to_q']?.errors &&
+                                  (f[key + '_to_q']?.errors?.outOfRange ||
+                                    f[key + '_to_q']?.errors?.notFullPeriod))
+                            }"
+                            [clearable]="true"
+                            [searchable]="false"
+                            formControlName="{{ key }}_to_y"
+                            (change)="selectToChange($event, key)"
+                          >
+                            <ng-option
+                              *ngFor="let r of getSelectOptions('YEAR')"
+                              value="{{ r.code }}"
+                              >{{ r.name }}
+                            </ng-option>
+                          </ng-select>
+                        </div>
+                        <div class="col-sm-12 col-md-6 col-lg-6">
+                          <ng-select
+                            placeholder="До"
+                            id="{{ key }}_to_q"
+                            [ngClass]="{
+                              'browser-default': true,
+                              bootstrapButton: true,
+                              btn: false,
+                              'is-invalid':
+                                f.errors ||
+                                (f[key + '_to_q']?.errors &&
+                                  (f[key + '_to_q']?.errors?.outOfRange ||
+                                    f[key + '_to_q']?.errors?.notFullPeriod))
+                            }"
+                            [clearable]="true"
+                            [searchable]="false"
+                            formControlName="{{ key }}_to_q"
+                            (change)="selectToChange($event, key)"
+                          >
+                            <ng-option
+                              *ngFor="let r of getSelectOptions(key)"
+                              value="{{ r.code }}"
+                              >{{ r.name }}</ng-option
+                            >
+                          </ng-select>
+                        </div>
+                      </div>
+                    </div>
+                    <div
+                      *ngIf="f[key + '_to_q']?.errors"
+                      class="invalid-feedback"
+                    >
+                      <div *ngIf="f[key + '_to_q'].errors?.outOfRange" i18n>
+                        Значение "до" должно превышать значение "от"
+                      </div>
+                      <div *ngIf="f[key + '_to_q'].errors?.notFullPeriod" i18n>
+                        Начало или конец периода не могут быть пустыми
+                      </div>
+                    </div>
+                  </div>
+                </ng-container>
+                <ng-container *ngSwitchCase="'MONTH'">
+                  <div class="row">
+                    <div class="col-sm-12 col-md-6 col-lg-6">
+                      <div class="row">
+                        <div class="col-sm-12 col-md-6 col-lg-6">
+                          <ng-select
+                            placeholder="От"
+                            id="{{ key }}_from_y"
+                            [ngClass]="{
+                              'browser-default': true,
+                              bootstrapButton: true,
+                              btn: false,
+                              'is-invalid':
+                                f.errors ||
+                                (f[key + '_to_m']?.errors &&
+                                  (f[key + '_to_m']?.errors?.outOfRange ||
+                                    f[key + '_to_m']?.errors?.notFullPeriod))
+                            }"
+                            [clearable]="true"
+                            [searchable]="false"
+                            formControlName="{{ key }}_from_y"
+                            (change)="selectFromChange($event, key)"
+                          >
+                            <ng-option
+                              *ngFor="let r of getSelectOptions('YEAR')"
+                              value="{{ r.code }}"
+                              >{{ r.name }}</ng-option
+                            >
+                          </ng-select>
+                        </div>
+                        <div class="col-sm-12 col-md-6 col-lg-6">
+                          <ng-select
+                            placeholder="От"
+                            id="{{ key }}_from_m"
+                            [ngClass]="{
+                              'browser-default': true,
+                              bootstrapButton: true,
+                              btn: false,
+                              'is-invalid':
+                                f.errors ||
+                                (f[key + '_to_m']?.errors &&
+                                  (f[key + '_to_m']?.errors?.outOfRange ||
+                                    f[key + '_to_m']?.errors?.notFullPeriod))
+                            }"
+                            [clearable]="true"
+                            [searchable]="false"
+                            formControlName="{{ key }}_from_m"
+                            (change)="selectFromChange($event, key)"
+                          >
+                            <ng-option
+                              *ngFor="let r of getSelectOptions(key)"
+                              value="{{ r.code }}"
+                              >{{ r.name }}</ng-option
+                            >
+                          </ng-select>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-sm-12 col-md-6 col-lg-6">
+                      <div class="row">
+                        <div class="col-sm-12 col-md-6 col-lg-6">
+                          <ng-select
+                            placeholder="До"
+                            id="{{ key }}_to_y"
+                            [ngClass]="{
+                              'browser-default': true,
+                              bootstrapButton: true,
+                              btn: false,
+                              'is-invalid':
+                                f.errors ||
+                                (f[key + '_to_m']?.errors &&
+                                  (f[key + '_to_m']?.errors?.outOfRange ||
+                                    f[key + '_to_m']?.errors?.notFullPeriod))
+                            }"
+                            [clearable]="true"
+                            [searchable]="false"
+                            formControlName="{{ key }}_to_y"
+                            (change)="selectToChange($event, key)"
+                          >
+                            <ng-option
+                              *ngFor="let r of getSelectOptions('YEAR')"
+                              value="{{ r.code }}"
+                              >{{ r.name }}
+                            </ng-option>
+                          </ng-select>
+                        </div>
+                        <div class="col-sm-12 col-md-6 col-lg-6">
+                          <ng-select
+                            placeholder="До"
+                            id="{{ key }}_to_m"
+                            [ngClass]="{
+                              'browser-default': true,
+                              bootstrapButton: true,
+                              btn: false,
+                              'is-invalid':
+                                f.errors ||
+                                (f[key + '_to_m']?.errors &&
+                                  (f[key + '_to_m']?.errors?.outOfRange ||
+                                    f[key + '_to_m']?.errors?.notFullPeriod))
+                            }"
+                            [clearable]="true"
+                            [searchable]="false"
+                            formControlName="{{ key }}_to_m"
+                            (change)="selectToChange($event, key)"
+                          >
+                            <ng-option
+                              *ngFor="let r of getSelectOptions(key)"
+                              value="{{ r.code }}"
+                              >{{ r.name }}</ng-option
+                            >
+                          </ng-select>
+                        </div>
+                      </div>
+                    </div>
+                    <div
+                      *ngIf="f[key + '_to_m']?.errors"
+                      class="invalid-feedback"
+                    >
+                      <div *ngIf="f[key + '_to_m'].errors?.outOfRange" i18n>
+                        Значение "до" должно превышать значение "от"
+                      </div>
+                      <div *ngIf="f[key + '_to_m'].errors?.notFullPeriod" i18n>
+                        Начало или конец периода не могут быть пустыми
+                      </div>
+                    </div>
+                  </div>
+                </ng-container>
+                <ng-container *ngSwitchCase="'DAY'">
+                  <div class="row">
+                    <div class="col-sm-12 col-md-6 col-lg-6">
+                      <input
+                        placeholder="От"
+                        appMobileLabelStyle
+                        [matDatepicker]="fromDatepicker"
+                        id="{{ key }}_from"
+                        matInput
+                        class="form-control dateOfIssue "
+                        formControlName="{{ key }}_from"
+                        [max]="currentDate"
+                        [min]="startDate"
+                        (dateChange)="dateFromChange($event.value, key)"
+                        [ngClass]="{
+                          'is-invalid':
+                            f.errors ||
+                            (f[key + '_to'].errors &&
+                              f[key + '_to'].errors.outOfRange)
+                        }"
+                      />
+                      <mat-datepicker-toggle matSuffix [for]="fromDatepicker">
+                      </mat-datepicker-toggle>
+                      <mat-datepicker #fromDatepicker></mat-datepicker>
+                      <button
+                        *ngIf="f[key + '_from'].value"
+                        type="button"
+                        class="btn remove-icon datepicker"
+                        (click)="reset(key, 'from')"
+                      ></button>
+                    </div>
+                    <div class="col-sm-12 col-md-6 col-lg-6">
+                      <input
+                        placeholder="До"
+                        appMobileLabelStyle
+                        [matDatepicker]="toDatepicker"
+                        id="{{ key }}_to"
+                        matInput
+                        [max]="currentDate"
+                        [min]="startDate"
+                        class="form-control dateOfIssue "
+                        formControlName="{{ key }}_to"
+                        (dateChange)="dateToChange($event.value, key)"
+                        [ngClass]="{
+                          'is-invalid':
+                            f.errors ||
+                            (f[key + '_to'].errors &&
+                              f[key + '_to'].errors.outOfRange)
+                        }"
+                      />
+                      <mat-datepicker-toggle matSuffix [for]="toDatepicker">
+                      </mat-datepicker-toggle>
+                      <mat-datepicker #toDatepicker></mat-datepicker>
+                      <button
+                        *ngIf="f[key + '_to'].value"
+                        type="button"
+                        class="btn remove-icon datepicker"
+                        (click)="reset(key, 'to')"
+                      ></button>
+                    </div>
+                    <div *ngIf="f[key + '_to'].errors" class="invalid-feedback">
+                      <div *ngIf="f[key + '_to'].errors?.outOfRange" i18n>
+                        Значение "до" должно превышать значение "от"
+                      </div>
+                    </div>
+                  </div>
+                </ng-container>
+                <ng-container *ngSwitchDefault>
+                  <div class="row">
+                    <div class="col-12">
+                      <div class="form-group">
+                        <app-step-filter
+                          (setStep)="
+                            selectFromChange($event, key); validateInterval(key)
+                          "
+                          ngDefaultControl
+                          [direction]="'От'"
+                          [values]="f[key + '_from'].value"
+                        >
+                        </app-step-filter>
+                      </div>
+                    </div>
+                    <div class="col-12">
+                      <div class="form-group">
+                        <app-step-filter
+                          (setStep)="
+                            selectToChange($event, key); validateInterval(key)
+                          "
+                          ngDefaultControl
+                          [direction]="'До'"
+                          [values]="f[key + '_to'].value"
+                          [class]="{
+                            'is-invalid':
+                              f.errors ||
+                              (f[key + '_to'].errors &&
+                                f[key + '_to'].errors.outOfRange)
+                          }"
+                        >
+                        </app-step-filter>
+                        <div
+                          *ngIf="f[key + '_to'].errors"
+                          class="invalid-feedback"
+                        >
+                          <div *ngIf="f[key + '_to'].errors.outOfRange" i18n>
+                            Значение "до" должно превышать значение "от"
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </ng-container>
+              </div>
+            </ng-container>
+            <ng-container *ngSwitchCase="'select'">
+              <ng-select
+                [ngClass]="{
+                  'browser-default': true,
+                  bootstrapButton: true,
+                  btn: false
+                }"
+                [clearable]="true"
+                [searchable]="false"
+                formControlName="{{ key }}"
+                (change)="selectChange($event, key)"
+              >
+                <ng-option
+                  *ngFor="let r of getSelectOptions(key)"
+                  value="{{ r.code }}"
+                  >{{ r.name }}</ng-option
+                >
+              </ng-select>
+            </ng-container>
+            <ng-container *ngSwitchDefault>def</ng-container>
+          </div>
+        </ng-container>
+      </div>
+      <div
+        [ngClass]="filtersResetNoty ? 'show' : 'hide'"
+        class="filters-reseted-noty"
+      >
+        <span class="noty-wrapper">Фильтр очищен</span>
+      </div>
+      <div class="remove-btm-wrapper">
+        <span class="remove-btn" i18n (click)="resetAll()">
+          Сбросить все
+        </span>
+      </div>
+      <div class="controls-modal-wrapper">
+        <button
+          type="button"
+          class="btn btn-transparent"
+          [ngClass]="loading ? 'loading' : ''"
+          i18n
+          (click)="close()"
+        >
+          Отменить
+          <span *ngIf="loading" class="loading"
+            ><span class="loader-icon"></span
+          ></span>
+        </button>
+        <button
+          type="button"
+          class="btn btn-primary"
+          [ngClass]="loading ? 'loading' : ''"
+          i18n
+          [disabled]="disabledSubmit"
+          (click)="saveChanges()"
+        >
+          Подтвердить
+          <span *ngIf="loading" class="loading"
+            ><span class="loader-icon"></span
+          ></span>
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

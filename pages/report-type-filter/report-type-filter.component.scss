@@ -1,0 +1,226 @@
+@import '~src/scss/variables';
+@import '~src/scss/mixins';
+//@import '../../../../../scss/bootstrap_basics';
+
+/* MY STYLES */
+.step-title {
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.filter-wrapper-inner {
+  position: relative;
+
+  .combo-group {
+    @include flex-container(row, flex-end, center);
+
+    .input-group {
+      padding: 0;
+      max-width: 250px;
+    }
+
+    .btn-link-sort {
+      background: url('./../../../../../assets/icons/icon-swap.svg') no-repeat
+        center !important;
+
+      &:hover {
+        border-color: transparent !important;
+      }
+    }
+  }
+}
+
+.filter-controls {
+  padding-top: 24px;
+  @include flex-container(row, flex-end, center);
+}
+
+.btn-wrapper {
+  padding: 0 8px;
+}
+
+.form-control + mat-datepicker-toggle {
+  margin-left: auto;
+  width: 100%;
+  position: absolute;
+  left: 16px;
+  right: 3px;
+  top: 0;
+  bottom: 0;
+}
+
+/* END MY STYLES */
+
+.statistic-controls-wrapper {
+  @include flex-container(row, flex-start, center);
+}
+
+.filter-wrapper {
+  &.date-filters-wrapper {
+    padding: 0 60px 0 30px;
+  }
+
+  input {
+    & + label {
+      font-size: 14px;
+      line-height: 20px;
+
+      &:hover {
+        color: $link-color;
+        text-decoration: underline;
+        cursor: pointer;
+      }
+    }
+
+    &:checked {
+      & + label {
+        color: $link-color;
+        text-decoration: underline;
+      }
+    }
+  }
+
+  .step-label {
+    display: flex;
+    align-items: center;
+  }
+}
+
+.form-item {
+  padding: 0 8px;
+}
+
+.purchase-currency {
+  font-size: 12px;
+  line-height: 16px;
+  color: $td-currency-color;
+}
+
+@media ( max-width: 767px ) {
+  .filters {
+    margin-top: 16px;
+  }
+
+  .ng-select .ng-select-container .ng-value-container .ng-placeholder {
+    font-size: 14px;
+  }
+
+  .table-wrapper {
+    padding: 0;
+    background: transparent;
+    box-shadow: none;
+  }
+
+  .table.table-striped {
+    background: transparent;
+
+    tbody {
+      tr {
+        @include flex-container(column, flex-start, flex-start);
+        box-shadow: 0px 1px 8px rgba(179, 183, 196, .2),
+          0px 3px 4px rgba(179, 183, 196, .12),
+          0px 3px 3px rgba(179, 183, 196, .14);
+
+        &:nth-of-type(odd) {
+          background: $background-light-transparent;
+        }
+
+        & + tr {
+          margin-top: 14px;
+        }
+      }
+
+      td {
+        @include flex-container(row, space-between, center);
+        padding: 0 16px;
+        height: 52px;
+        width: 100%;
+
+        a.product-name {
+          font-size: 16px;
+
+          &:before {
+            content: '';
+            position: absolute;
+          }
+        }
+
+        &[ data-label ='Place' ] {
+          justify-content: flex-start;
+          position: relative;
+
+          &:hover,
+          &:focus {
+            background: $focused-input-bg;
+          }
+        }
+
+        &:first-child {
+          padding: 0 16px !important;
+        }
+
+        & + td {
+          border-top: 1px solid $border-color-basic !important;
+        }
+      }
+    }
+  }
+
+  .purchase-currency {
+    @include flex-container(column, flex-start, flex-end);
+  }
+
+  .mobile-label {
+    font-size: 12px;
+    line-height: 16px;
+    text-transform: uppercase;
+    color: $text-secondary;
+  }
+
+  .product-card-type {
+    width: 32px;
+    height: 24px;
+    margin-right: 14px;
+  }
+
+  .content-wrapper {
+    width: 100%;
+    position: relative;
+
+    .mobile-link {
+      position: absolute;
+      left: 0;
+      bottom: -12px;
+      right: 0;
+      top: -12px;
+      z-index: 2;
+    }
+
+    &:after {
+      content: '';
+      position: absolute;
+      right: 0;
+      top: 50%;
+      margin-top: -6px;
+      height: 12px;
+      width: 8px;
+      display: block;
+      background: url(data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iOCIgaGVpZ2h0PSIxMiIgdmlld0JveD0iMCAwIDggMTIiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHBhdGggZD0iTTAuNTg5ODQ0IDEwLjU4TDUuMTY5ODQgNkwwLjU4OTg0NCAxLjQxTDEuOTk5ODQgMEw3Ljk5OTg0IDZMMS45OTk4NCAxMkwwLjU4OTg0NCAxMC41OFoiIGZpbGw9IiMwRTdCNkUiLz48L3N2Zz4=)
+        no-repeat center;
+    }
+  }
+
+  .purchase-value {
+    font-size: 16px;
+  }
+
+  .purchase-currency-name {
+    font-size: 12px;
+    padding-left: 5px;
+    color: $text-def;
+  }
+
+  .purchase-wrapper {
+    @include flex-container(column, flex-end, flex-end);
+  }
+}

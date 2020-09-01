@@ -1,0 +1,70 @@
+@import '~src/scss/variables';
+@import '~src/scss/mixins';
+
+:host {
+  .form-control {
+    & + mat-datepicker-toggle {
+      margin-left: auto;
+      width: auto;
+      position: absolute;
+      left: 9px;
+      right: 9px;
+      top: 0;
+      bottom: 0;
+    }
+  }
+}
+
+.form-group label {
+  white-space: pre-wrap;
+}
+
+.modal-header .close {
+  z-index: 99999;
+}
+
+.modal-body {
+  padding: 30px 45px 16px;
+}
+
+/* Start Designer fail idea mb changed */
+
+.row {
+  margin: 0 -8px;
+}
+
+[ class ^='col-' ] {
+  padding: 0 8px !important;
+}
+
+/* End Designer fail idea mb changed */
+
+.remove-btm-wrapper {
+  padding: 18px 0 36px;
+  border-bottom: 1px solid $border-color-basic;
+  margin-bottom: 40px;
+  text-align: right;
+}
+
+.remove-btn {
+  color: $remove-btn-color;
+  text-decoration: underline;
+  text-transform: uppercase;
+
+  &:hover {
+    cursor: pointer;
+    text-decoration: none;
+  }
+}
+
+.controls-modal-wrapper {
+  text-align: right;
+
+  .btn {
+    width: 136px;
+
+    & + .btn {
+      margin-left: 8px;
+    }
+  }
+}
